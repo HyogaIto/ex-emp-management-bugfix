@@ -7,8 +7,10 @@ $(function(){
 		if($("#password").val()!=$("#confirmationPassword").val()){
 			$("#passMessage").show();
 			$("#passMessage").text("確認用パスワードが一致していません");
+			$("#submit").prop("disabled", true);
 		}else{
 			$("#passMessage").hide();
+			$("#submit").prop("disabled", false);
 		}
 //		
 //		var hostUrl="http://localhost:8080/checkPass";
