@@ -1,7 +1,6 @@
 package jp.co.sample.emp_management.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -11,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import jp.co.sample.emp_management.domain.Administrator;
 import jp.co.sample.emp_management.form.InsertAdministratorForm;
@@ -74,15 +75,15 @@ public class AdministratorController {
 	 * @return ログイン画面へリダイレクト
 	 */
 	@RequestMapping("/insert")
-	public String insert(@Validated InsertAdministratorForm form,BindingResult result,Model model) {
+	public String insert(@Validated InsertAdministratorForm form,BindingResult result) {
 		if (result.hasErrors()) {
 			return toInsert();
 		}
 		
 		Administrator administrator=administratorService.serchByMailAddress(form.getMailAddress());
 		if(administrator!=null) {
-			model.addAttribute("error", "このメールアドレスは登録済みです");
-			
+			FieldError emailError = new FieldError(result.getObjectName(), "mailAddress", "このメールアドレスは既に登録済みです");
+			result.addError(emailError);
 			return toInsert();
 		}
 		
@@ -139,20 +140,20 @@ public class AdministratorController {
 		return "redirect:/";
 	}
 	
-//	
-//	@RequestMapping(value = "/checkPass",method = RequestMethod.POST)
-//	public Map<String, String> checkPass(String pass,String confPass){
-//		Map<String, String> map=new HashMap<>();
-//		String message=null;
-//		if(pass.equals(confPass)) {
-//			message="確認用パスワード入力OK";
-//		}else {
-//			message="パスワードが一致していません";
-//		}
-//		map.put("passMessage", message);
-//		System.out.println(map);
-//		return map;
-//		
-//	}
+	@ResponseBody
+	@RequestMapping(value = "/checkPass",method = RequestMethod.POST)
+	public Map<String, String> checkPass(String pass,String confPass){
+		Map<String, String> map=new HashMap<>();
+		String message=null;
+		if(pass.equals(confPass)) {
+			message="確認用パスワード入力OK";
+		}else {
+			message="パスワードが一致していません";
+		}
+		map.put("passMessage", message);
+		System.out.println(map);
+		return map;
+		
+	}
 	
 }
