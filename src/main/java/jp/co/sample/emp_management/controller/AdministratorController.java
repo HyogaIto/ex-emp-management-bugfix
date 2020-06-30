@@ -1,5 +1,7 @@
 package jp.co.sample.emp_management.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.BeanUtils;
@@ -69,13 +71,19 @@ public class AdministratorController {
 	 * @return ログイン画面へリダイレクト
 	 */
 	@RequestMapping("/insert")
-	public String insert(@Validated InsertAdministratorForm form,BindingResult result) {
+	public String insert(@Validated InsertAdministratorForm form,BindingResult result,Model model) {
 		if (result.hasErrors()) {
 			return toInsert();
 		}
 		
+		Administrator administrator=administratorService.serchByMailAddress(form.getMailAddress());
+		if(administrator!=null) {
+			model.addAttribute("error", "このメールアドレスは登録済みです");
+			
+			return toInsert();
+		}
 		
-		Administrator administrator = new Administrator();
+		administrator = new Administrator();
 		// フォームからドメインにプロパティ値をコピー
 		BeanUtils.copyProperties(form, administrator);
 		administratorService.insert(administrator);
