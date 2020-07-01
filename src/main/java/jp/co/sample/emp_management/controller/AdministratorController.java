@@ -76,29 +76,29 @@ public class AdministratorController {
 	 */
 	@RequestMapping("/insert")
 	public String insert(@Validated InsertAdministratorForm form,BindingResult result) {
-		if (result.hasErrors()) {
-			return toInsert();
-		}
 		
 		Administrator administrator=administratorService.serchByMailAddress(form.getMailAddress());
 		if(administrator!=null) {
 			FieldError emailError = new FieldError(result.getObjectName(), "mailAddress", "このメールアドレスは既に登録済みです");
 			result.addError(emailError);
-			return toInsert();
 		}
-		
-		
 		if(!(form.getPassword().equals(form.getConfPassword()))) {
 			FieldError confPassError = new FieldError(result.getObjectName(), "confPassword", "確認用パスワードが一致しません");
 			result.addError(confPassError);
+		} 
+		
+		if (result.hasErrors()) {
 			return toInsert();
 		}
 		
-		administrator = new Administrator();
-		// フォームからドメインにプロパティ値をコピー
-		BeanUtils.copyProperties(form, administrator);
-		administratorService.insert(administrator);
-		return "redirect:/";
+			administrator = new Administrator();
+			// フォームからドメインにプロパティ値をコピー
+			BeanUtils.copyProperties(form, administrator);
+			administratorService.insert(administrator);
+			return "redirect:/";
+			
+		
+		
 	}
 
 	/////////////////////////////////////////////////////
