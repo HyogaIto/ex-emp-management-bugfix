@@ -1,7 +1,8 @@
 package jp.co.sample.emp_management.controller;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import jp.co.sample.emp_management.domain.Employee;
 import jp.co.sample.emp_management.form.UpdateEmployeeForm;
@@ -101,4 +103,27 @@ public class EmployeeController {
 		employeeService.update(employee);
 		return "redirect:/employee/showList";
 	}
+	
+	
+	/**
+	 * オートコンプリート用に名前一覧を返すメソッド.
+	 * 
+	 * @return　名前一覧が格納されたマップ
+	 */
+	@ResponseBody
+	@RequestMapping("/auteComplete")
+	public Map<String , String[]> auteComplete(){
+		Map<String, String[]> map=new HashMap<>();
+		List<Employee> employees=employeeService.showList(null);
+		System.out.println(employees.get(0).getName());
+		String[] names= new String[employees.size()];
+		for(int i=0;i<employees.size();i++) {
+			names[i]=employees.get(i).getName();
+		}
+		map.put("empName", names);
+		
+		return map;
+ 		
+	}
+	
 }
