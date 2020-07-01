@@ -23,13 +23,15 @@ public class EmployeeService {
 	@Autowired
 	private EmployeeRepository employeeRepository;
 	
+	
 	/**
-	 * 従業員情報を全件取得します.
+	 * 従業員情報を取得します. 検索する名前がない場合は全件検索を行います	.
 	 * 
-	 * @return　従業員情報一覧
+	 * @param empName 検索する名前
+	 * @return　従業員情報
 	 */
 	public List<Employee> showList(String empName) {
-		List<Employee> employeeList = new ArrayList<>();
+		List<Employee> employeeList = null;
 		if(empName==null || empName=="") {
 			employeeList = employeeRepository.findAll();
 		}else{
@@ -37,6 +39,7 @@ public class EmployeeService {
 		}
 		return employeeList;
 	}
+	
 	
 	
 	/**

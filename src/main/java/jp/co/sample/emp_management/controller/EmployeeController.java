@@ -49,7 +49,7 @@ public class EmployeeController {
 	 */
 	@RequestMapping("/showList")
 	public String showList(Model model, String empName) {
-		List<Employee> employeeList = new ArrayList<>();
+		List<Employee> employeeList = null;
 
 		employeeList = employeeService.showList(empName);
 
