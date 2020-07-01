@@ -18,6 +18,11 @@ public class InsertAdministratorForm {
 	/** パスワード */
 	@NotBlank
 	private String password;
+	/** 確認用パスワード */
+	@NotBlank
+	private String confPassword;
+	
+	
 	public String getName() {
 		return name;
 	}
@@ -35,6 +40,14 @@ public class InsertAdministratorForm {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	
+	public String getConfPassword() {
+		return confPassword;
+	}
+	public void setConfPassword(String confPassword) {
+		this.confPassword = confPassword;
 	}
 	@Override
 	public String toString() {

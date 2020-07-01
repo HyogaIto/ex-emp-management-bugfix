@@ -83,14 +83,14 @@
 							<div class="form-group">
 								<div class="row">
 									<div class="col-sm-12">
-										<label for="passwaord">
+										<label for="confPasswaord">
 											確認用パスワード:
 										</label>
-										<label th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-messages">
+										<label th:if="${#fields.hasErrors('confPassword')}" th:errors="*{confPassword}" class="error-messages">
 											確認用パスワードを入力してください
 										</label>
-										<input type="password" name="password" id="confirmationPassword" class="form-control" placeholder="confirmationPassword"
-											 th:field="*{password}" th:errorclass="error-input" value="xxxxxxxx">
+										<input type="password" name="confPassword" id="confPassword" class="form-control" placeholder="confPassword"
+											 th:field="*{confPassword}" th:errorclass="error-input" value="xxxxxxxx">
 									</div>
 								</div>
 							</div>

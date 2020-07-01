@@ -87,6 +87,13 @@ public class AdministratorController {
 			return toInsert();
 		}
 		
+		
+		if(!(form.getPassword().equals(form.getConfPassword()))) {
+			FieldError confPassError = new FieldError(result.getObjectName(), "confPassword", "確認用パスワードが一致しません");
+			result.addError(confPassError);
+			return toInsert();
+		}
+		
 		administrator = new Administrator();
 		// フォームからドメインにプロパティ値をコピー
 		BeanUtils.copyProperties(form, administrator);
@@ -140,20 +147,20 @@ public class AdministratorController {
 		return "redirect:/";
 	}
 	
-	@ResponseBody
-	@RequestMapping(value = "/checkPass",method = RequestMethod.POST)
-	public Map<String, String> checkPass(String pass,String confPass){
-		Map<String, String> map=new HashMap<>();
-		String message=null;
-		if(pass.equals(confPass)) {
-			message="確認用パスワード入力OK";
-		}else {
-			message="パスワードが一致していません";
-		}
-		map.put("passMessage", message);
-		System.out.println(map);
-		return map;
-		
-	}
+//	@ResponseBody
+//	@RequestMapping(value = "/checkPass",method = RequestMethod.POST)
+//	public Map<String, String> checkPass(String pass,String confPass){
+//		Map<String, String> map=new HashMap<>();
+//		String message=null;
+//		if(pass.equals(confPass)) {
+//			message="確認用パスワード入力OK";
+//		}else {
+//			message="パスワードが一致していません";
+//		}
+//		map.put("passMessage", message);
+//		System.out.println(map);
+//		return map;
+//		
+//	}
 	
 }
