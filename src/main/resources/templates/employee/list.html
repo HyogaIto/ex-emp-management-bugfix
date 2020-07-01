@@ -63,6 +63,12 @@
 <!-- ここから上を編集する必要はありません -->
 
 <!-- ここにモックのtable要素を貼り付けます -->
+				<form th:action="@{/employee/showList}" method="post">
+						従業員名：
+						<input type="text" name="empName" id="empName">
+						<button>検索</button>
+				</form>
+				<div th:text="${noList}"></div>
 
 				<table class="table table-striped">
 					<thead>

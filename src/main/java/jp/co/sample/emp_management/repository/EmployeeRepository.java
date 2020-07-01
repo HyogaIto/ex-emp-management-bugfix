@@ -83,4 +83,16 @@ public class EmployeeRepository {
 		String updateSql = "UPDATE employees SET dependents_count=:dependentsCount WHERE id=:id";
 		template.update(updateSql, param);
 	}
+
+	public List<Employee> findByName(String empName) {
+
+		String sql = "SELECT id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count FROM employees "
+				+ " where  name like :name order by hire_date";
+		empName = "%" + empName + "%";
+		SqlParameterSource param = new MapSqlParameterSource("name", empName);
+
+		List<Employee> developmentList = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
+
+		return developmentList;
+	}
 }
