@@ -43,11 +43,11 @@ public class AdministratorService {
 	 */
 	public Administrator login(String mailAddress, String passward) {
 		Administrator administrator = null;
+		
 		administrator = serchByMailAddress(mailAddress);
-		String dbPassword = administrator.getPassword();
-
-		if (administrator != null && passwordEncoder.matches(passward, dbPassword)) {
-			administrator = administratorRepository.findByMailAddressAndPassward(mailAddress, dbPassword);
+		if (administrator != null && passwordEncoder.matches(passward, administrator.getPassword())) {
+		
+			administrator = administratorRepository.findByMailAddressAndPassward(mailAddress, administrator.getPassword());
 		}
 
 		return administrator;

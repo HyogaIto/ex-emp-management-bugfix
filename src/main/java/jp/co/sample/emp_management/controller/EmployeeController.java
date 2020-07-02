@@ -125,4 +125,10 @@ public class EmployeeController {
  		
 	}
 	
+	@RequestMapping("/registerEmployee")
+	public String registerEmployee()
+	{
+		return "employee/registerEmployee";
+	}
+	
 }

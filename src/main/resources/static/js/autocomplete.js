@@ -4,10 +4,10 @@
 
 
  $( function() {
-      $("#empName").on("keyup",function() {
-		$.ajax({
+
+	 $.ajax({
 			url:"http://localhost:8080/employee/auteComplete",
-			type:"POST",
+			type:"GET",
 			async:true
 		}).done(function(data){
 			console.dir(JSON.stringify(data));
@@ -15,12 +15,15 @@
 				  source: data.empName
 			  })
 		}).fail(function(XMLHttpRecest,testStatus,errorThrown){
-			alert("正しい結果を得られませんでした");
+			//alert("正しい結果を得られませんでした");
 			console.log("XMLHttpRecest:"+XMLHttpRecest);
 			console.log("testStatus:"+testStatus);
 			console.log("errorThrown:"+errorThrown);
 		})
-	
-    
-    });
+		
+//      $("#empName").on("keyup",function() {
+//		
+//	
+//    
+//    });
   });
