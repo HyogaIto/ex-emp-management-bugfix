@@ -1,6 +1,7 @@
 package jp.co.sample.emp_management.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,38 +17,50 @@ import jp.co.sample.emp_management.repository.AdministratorRepository;
 @Service
 @Transactional
 public class AdministratorService {
-	
+
 	@Autowired
 	private AdministratorRepository administratorRepository;
+
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	/**
 	 * 管理者情報を登録します.
 	 * 
-	 * @param administrator　管理者情報
+	 * @param administrator 管理者情報
 	 */
 	public void insert(Administrator administrator) {
+		administrator.setPassword(passwordEncoder.encode(administrator.getPassword()));
 		administratorRepository.insert(administrator);
 	}
-	
+
 	/**
 	 * ログインをします.
+	 * 
 	 * @param mailAddress メールアドレス
-	 * @param password パスワード
-	 * @return 管理者情報　存在しない場合はnullが返ります
+	 * @param password    パスワード
+	 * @return 管理者情報 存在しない場合はnullが返ります
 	 */
 	public Administrator login(String mailAddress, String passward) {
-		Administrator administrator = administratorRepository.findByMailAddressAndPassward(mailAddress, passward);
+		Administrator administrator = null;
+		administrator = serchByMailAddress(mailAddress);
+		String dbPassword = administrator.getPassword();
+
+		if (administrator != null && passwordEncoder.matches(passward, dbPassword)) {
+			administrator = administratorRepository.findByMailAddressAndPassward(mailAddress, dbPassword);
+		}
+
 		return administrator;
 	}
-	
+
 	/**
 	 * メールアドレスが登録済みか確かめます.
 	 * 
 	 * @param mailAddress メールアドレス
-	 * @return　管理者情報　存在しない場合はnullが返ります
+	 * @return 管理者情報 存在しない場合はnullが返ります
 	 */
 	public Administrator serchByMailAddress(String mailAddress) {
-		Administrator administrator=administratorRepository.findByMailAddress(mailAddress);
+		Administrator administrator = administratorRepository.findByMailAddress(mailAddress);
 		return administrator;
 	}
 }
