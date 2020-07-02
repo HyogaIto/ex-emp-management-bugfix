@@ -115,7 +115,6 @@ public class EmployeeController {
 	public Map<String , String[]> auteComplete(){
 		Map<String, String[]> map=new HashMap<>();
 		List<Employee> employees=employeeService.showList(null);
-		System.out.println(employees.get(0).getName());
 		String[] names= new String[employees.size()];
 		for(int i=0;i<employees.size();i++) {
 			names[i]=employees.get(i).getName();

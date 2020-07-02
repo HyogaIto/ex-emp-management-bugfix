@@ -5,7 +5,6 @@
 
  $( function() {
       $("#empName").on("keyup",function() {
-    	  console.log("bbb");
 		$.ajax({
 			url:"http://localhost:8080/employee/auteComplete",
 			type:"POST",
