@@ -65,38 +65,68 @@
 
 <!-- ここから上を編集する必要はありません -->
 
-<!-- ここにモックのtable要素を貼り付けます -->
-				<form th:action="@{/employee/showList}" method="post">
-						従業員名：
-						<input type="text" name="empName" id="empName">
-						<button>検索</button>
-				</form>
-				<div th:text="${noList}"></div>
+<form th:action="@{/employee/register}" method="post" th:object="${registerEmployeeForm}" enctype="multipart/form-data">
+	従業員名:
+		<label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-messages">
+		</label><br>
+	<input type="text" name="name" th:field="*{name}">
+	<br>
+	写真：
+		<label th:if="${#fields.hasErrors('image')}" th:errors="*{image}" class="error-messages">
+		</label><br>
+	<input type="file" name="image" th:field="*{image}">
+	<br>
+	性別：
+		<label th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="error-messages">
+		</label><br>
+	男：<input type="radio" name="gender" value="男" th:field="*{gender}">
+	女：<input type="radio" name="gender" value="女" th:field="*{gender}">
+	<br>
+	入社日：
+		<label th:if="${#fields.hasErrors('hireDate')}" th:errors="*{hireDate}" class="error-messages">
+		</label><br>
+	<input type="date" name="hireDate" th:field="*{hireDate}">
+	<br>
+	メールアドレス：
+		<label th:if="${#fields.hasErrors('mailAddress')}" th:errors="*{mailAddress}" class="error-messages">
+		</label><br>
+	<input type="email" name="mailAddress" th:field="*{mailAddress}">
+	<br>
+	郵便番号：
+		<label th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}" class="error-messages">
+		</label><br>
+	<input type="text" name="zipCode" th:field="*{zipCode}" id="zipCode">
+	<br>
+	住所：
+		<label th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="error-messages">
+		</label><br>
+	<input type="text" name="address" th:field="*{address}" id="address">
+	<br>
+	電話番号：
+		<label th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}" class="error-messages">
+		</label><br>
+	<input type="text" name="telephone" th:field="*{telephone}">
+	<br>
+	給料：
+		<label th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}" class="error-messages">
+		</label><br>
+	<input type="number" name="salary" th:field="*{salary}">
+	<br>
+	特性：<br>
+		<label th:if="${#fields.hasErrors('characteristics')}" th:errors="*{characteristics}" class="error-messages">	
+		</label>
+		<br>
+	<textarea rows="10" cols="30" name="characteristics" th:field="*{characteristics}"></textarea>
+	<br>	
+	扶養人数：
+		<label th:if="${#fields.hasErrors('dependentsCount')}" th:errors="*{dependentsCount}" class="error-messages">
+		</label><br>
+	<input type="number" name="dependentsCount" th:field="*{dependentsCount}">
+	<br>
+	<button>登録</button>
 
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>従業員名</th>
-							<th>入社日</th>
-							<th>扶養人数</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="employee : ${employeeList}">
-							<td>
-								<a href="detail.html" th:href="@{'/employee/showDetail?id=' + ${employee.id}}">
-									<span th:text="${employee.name}">山田太郎</span>
-								</a>
-							</td>
-							<td>
-								<span th:text="${#dates.format(employee.hireDate,'yyyy年MM月dd日')}">2016/12/1</span>
-							</td>
-							<td>
-								<span th:text="${employee.dependentsCount} + '人'">3人</span>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+</form>
+			
 
 
 <!-- ここから下を編集する必要はありません -->
@@ -107,21 +137,12 @@
 	<!-- end container -->
 	
 <!--  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
-	  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   
 <!--	<script src="../../static/js/bootstrap.min.js"></script>-->
-	<script th:src="@{/js/autocomplete.js}"></script>
-	<script th:src="@{/js/PaginateMyTable.js}"></script>
-<script>
-$(document).ready(function() {
-  $(".table").paginate({
-	  rows: 10
-  });
-});
-</script>
-	
-	
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script th:src="@{/js/zipcoda.js}"></script>
+
 
 </body>
 </html>

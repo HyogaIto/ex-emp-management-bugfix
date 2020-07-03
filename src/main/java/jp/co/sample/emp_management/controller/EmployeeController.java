@@ -1,26 +1,34 @@
 package jp.co.sample.emp_management.controller;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.Date;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import jp.co.sample.emp_management.domain.Employee;
+import jp.co.sample.emp_management.form.RegisterEmployeeForm;
 import jp.co.sample.emp_management.form.UpdateEmployeeForm;
 import jp.co.sample.emp_management.service.EmployeeService;
 
 /**
  * 従業員情報を操作するコントローラー.
  * 
- * @author igamasayuki
+ * @author igamasayuki 
  *
  */
 @Controller
@@ -38,6 +46,10 @@ public class EmployeeController {
 	@ModelAttribute
 	public UpdateEmployeeForm setUpForm() {
 		return new UpdateEmployeeForm();
+	}
+	@ModelAttribute
+	public RegisterEmployeeForm setUpRegiserForm() {
+		return new RegisterEmployeeForm();
 	}
 
 	/////////////////////////////////////////////////////
@@ -130,5 +142,66 @@ public class EmployeeController {
 	{
 		return "employee/registerEmployee";
 	}
+	
+	@RequestMapping("/register")
+	public synchronized String register(@Validated RegisterEmployeeForm form,BindingResult result)  throws IOException {
+		
+		Employee existEmployee = employeeService.findByMailAddress(form.getMailAddress());
+		if (existEmployee != null) {
+			FieldError emailError = new FieldError(result.getObjectName(), "mailAddress", "このメールアドレスは既に登録済みです");
+			result.addError(emailError);
+		}
+
+		// 画像ファイル形式チェック
+		MultipartFile imageFile = form.getImage();
+		String fileExtension = null;
+		try {
+			fileExtension = getExtension(imageFile.getOriginalFilename());
+
+			if (!"jpg".equals(fileExtension) && !"png".equals(fileExtension)) {
+				FieldError imageError = new FieldError(result.getObjectName(), "image", "拡張子は.jpgか.pngのみに対応しています");
+				result.addError(imageError);
+			}
+		} catch (Exception e) {
+			FieldError imageError = new FieldError(result.getObjectName(), "image", "拡張子は.jpgか.pngのみに対応しています");
+			result.addError(imageError);
+		}
+
+		// 一つでもエラーがあれば入力画面へ戻りエラーメッセージを出す
+	
+		if(result.hasErrors()) {
+			return registerEmployee();
+		}
+		
+		
+		Employee employee=new Employee();
+		
+		BeanUtils.copyProperties(form,employee);
+		Date date = java.sql.Date.valueOf(form.getHireDate());
+		employee.setHireDate(date);
+
+		String base64FileString = Base64.getEncoder().encodeToString(imageFile.getBytes());
+		if ("jpg".equals(fileExtension)) {
+			base64FileString = "data:image/jpeg;base64," + base64FileString;
+		} else if ("png".equals(fileExtension)) {
+			base64FileString = "data:image/png;base64," + base64FileString;
+		}
+		employee.setImage(base64FileString);
+		employeeService.insert(employee);
+		return "redirect:/employee/showList";
+	}
+	
+	private String getExtension(String originalFileName) throws Exception {
+		if (originalFileName == null) {
+			throw new FileNotFoundException();
+		}
+		int point = originalFileName.lastIndexOf(".");
+		if (point == -1) {
+			throw new FileNotFoundException();
+		}
+		return originalFileName.substring(point + 1);
+	}
+	
+	
 	
 }

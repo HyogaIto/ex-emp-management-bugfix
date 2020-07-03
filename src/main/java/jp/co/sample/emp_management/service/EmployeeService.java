@@ -1,6 +1,5 @@
 package jp.co.sample.emp_management.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,5 +60,20 @@ public class EmployeeService {
 	 */
 	public void update(Employee employee) {
 		employeeRepository.update(employee);
+	}
+	
+	
+	/**
+	 * 従業員情報を挿入します.
+	 * 
+	 * @param employee 挿入した従業員情報
+	 */
+	public void insert(Employee employee) {
+		employeeRepository.insert(employee);
+	}
+	
+	public Employee findByMailAddress(String mailAddress) {
+		Employee employee=employeeRepository.findByMailAddress(mailAddress);
+		return employee;
 	}
 }
